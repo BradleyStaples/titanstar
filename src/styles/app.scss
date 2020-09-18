@@ -1,0 +1,156 @@
+@mixin icon-sprite($offset) {
+  $offset: $offset - 1; // $offset is 1-based, background-position is 0-based
+  background-position: -50px * $offset -50px;
+}
+
+$iconSize: 58px;
+$skillIcons: 'chevrons', 'silverware', 'cake', 'crown', 'ship', 'snorkel', 'lightning', 'skull';
+
+.page {
+  max-width: 998px;
+  height: 373px;
+  margin: 0 auto;
+  padding: 10px;
+  background: url(../images/talent-calc-bg.png) center center no-repeat;
+
+  &__title {
+    width: calc(100%-36px); // 18px "margin" on either side
+    padding: 12px;
+    font-size: 18px;
+    text-align: center;
+    color: #f6f6f6;
+    background-color: #191b1d;
+  }
+
+  &__body {
+    display: flex;
+    margin-top: 100px;
+  }
+}
+
+.talent-paths {
+  flex: 0 0 75%;
+
+  &__tree {
+    height: 50px;
+    display: flex;
+  }
+
+  &__tree + &__tree {
+    margin-top: 50px;
+  }
+
+  &__label {
+    flex: 0 0 155px;
+    padding-left: 10px;
+    align-self: center;
+    text-transform: uppercase;
+  }
+}
+
+.tiers {
+  flex: 1 0 auto;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__skill {
+    position: relative;
+    flex: 0 0 25%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  &__bar {
+    position: absolute;
+    top: 50%;
+    margin-top: -1 * $iconSize / 8; // half of height
+    left: $iconSize;
+    z-index: 1;
+    width: calc(100% - #{$iconSize});
+    height: $iconSize / 4;
+    border-top: 1px solid #1c1e20;
+    border-bottom: 1px solid #1c1e20;
+    background-color: #191a1b;
+    transition: background-color 0.5s;
+  }
+
+  &__bar--active {
+    border-top: 1px solid #414243;
+    border-bottom: 1px solid #414243;
+    background-color: #313335;
+  }
+
+  &__bar--hidden {
+    display: none;
+  }
+
+  &__icon {
+    position: absolute;
+    z-index: 2;
+    width: $iconSize;
+    height: $iconSize;
+    background: url(../images/talent-icons-sprite.png) 0 0;
+    border: 4px solid;
+    border-image-slice: 1;
+    border-width: 4px;
+    border-image-source: linear-gradient(to bottom, #4b4b4b, #222);
+    cursor: pointer;
+    transition: opacity 0.5s;
+  }
+
+  &__icon--maxed {
+    cursor: not-allowed;
+  }
+
+  &__icon--invalid {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  &__icon--active {
+    cursor: pointer; // if active & maxed, still show pointer cursor so user knows they can deselect
+    border-image-source: linear-gradient(to bottom, #5cabf0, #304d77);
+    background-position-y: 0 !important; // ugh, important. have to overide background-position: from default __icon class.
+  }
+
+  &__icon:hover {
+    opacity: 1.0;
+  }
+
+  @for $i from 1 through length($skillIcons) {
+    $icon: nth($skillIcons, $i);
+    &__icon--#{$icon} {
+      @include icon-sprite($i);
+    }
+  }
+}
+
+.summary-points {
+  flex: 0 0 25%;
+  height: 65px;
+  align-self: center;
+  text-align: center;
+
+  &__content {
+    width: 175px;
+    height: 65px; // needs to match .summary-points
+    border: 2px solid #111;
+    background-color: #000;
+  }
+
+  &__counter {
+    color: #ecebec;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 10px;
+  }
+
+  &__label {
+    color: #3a5a79;
+    font-size: 16px;
+    padding: 5px 0 15px 0;
+  }
+}

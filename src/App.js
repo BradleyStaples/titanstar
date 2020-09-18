@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-function App() {
+import SkillTree from './components/skill-tree';
+import SummaryPoints from './components/summary-points';
+import './styles/app.scss';
+
+const App = ({data}) => {
+
+  const [pointsSpent, setPointsSpent] = useState(data.pointsSpent);
+
+  const updateSummaryPoints = (offset) => {
+    setPointsSpent(pointsSpent + offset);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="page">
+      <header className="page__header">
+        <h1 className="page__title">TitanStar Legends &mdash; Rune Mastery Loadout Talent Calculator 9000</h1>
       </header>
+      <div className="page__body">
+        <div className="talent-paths">
+          {data.trees.map((tree) => (
+            <SkillTree
+              key={tree.id}
+              id={tree.id}
+              name={tree.name}
+              icons={tree.icons}
+              pointsSpent={pointsSpent}
+              maxPoints={data.maxPoints}
+              updateSummaryPoints={updateSummaryPoints}
+            />
+          ))}
+        </div>
+        <SummaryPoints current={pointsSpent} total={data.maxPoints} />
+      </div>
     </div>
   );
 }
+
+App.propTypes = {
+  data: PropTypes.object.isRequired
+};
 
 export default App;
