@@ -83,13 +83,7 @@ $skillIcons: 'chevrons', 'silverware', 'cake', 'crown', 'ship', 'snorkel', 'ligh
     background-color: #313335;
   }
 
-  &__bar--hidden {
-    display: none;
-  }
-
   &__icon {
-    position: absolute;
-    z-index: 2;
     width: $iconSize;
     height: $iconSize;
     background: url(../images/talent-icons-sprite.png) 0 0;
