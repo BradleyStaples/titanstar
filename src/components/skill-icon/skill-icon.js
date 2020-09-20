@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const SkillIcon = ({ rank, icon, pointsSpent, maxPoints, pointsPerTree, validateActivation, validateDeactivation}) => {
+const SkillIcon = (props) => {
+  const {
+    cost,
+    name,
+    unlockedAt,
+    pointsSpent,
+    maxPoints,
+    pointsPerTree,
+    validateActivation,
+    validateDeactivation
+  } = props;
 
   const [active, setActive] = useState(false);
-  const iconClass = classnames(`tiers__icon tiers__icon--${icon}`, {
+  const iconClass = classnames(`tiers__icon tiers__icon--${name}`, {
     'tiers__icon--active': active,
-    'tiers__icon--invalid': rank > pointsPerTree,
+    'tiers__icon--invalid': unlockedAt > pointsPerTree,
     'tiers__icon--maxed': pointsSpent === maxPoints
   });
 
@@ -20,7 +30,7 @@ const SkillIcon = ({ rank, icon, pointsSpent, maxPoints, pointsPerTree, validate
     }
 
     // only want to toggle the status if the parent says its okay
-    const isValid = validateActivation(rank);
+    const isValid = validateActivation(unlockedAt, cost);
     if (isValid) {
       setActive(true);
     }
@@ -35,7 +45,7 @@ const SkillIcon = ({ rank, icon, pointsSpent, maxPoints, pointsPerTree, validate
     }
 
     // only want to toggle the status if the parent says its okay
-    const isValid = validateDeactivation(rank);
+    const isValid = validateDeactivation(unlockedAt, cost);
     if (isValid) {
       setActive(false);
     }
@@ -46,14 +56,15 @@ const SkillIcon = ({ rank, icon, pointsSpent, maxPoints, pointsPerTree, validate
       className={iconClass}
       onClick={toggleActive}
       onContextMenu={toggleInactive}
-      title={icon}
+      title={name}
     ></div>
   );
 };
 
 SkillIcon.propTypes = {
-  rank: PropTypes.number.isRequired,
-  icon: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  cost: PropTypes.number.isRequired,
+  unlockedAt: PropTypes.number.isRequired,
   pointsSpent: PropTypes.number.isRequired,
   maxPoints: PropTypes.number.isRequired,
   pointsPerTree: PropTypes.number.isRequired,
